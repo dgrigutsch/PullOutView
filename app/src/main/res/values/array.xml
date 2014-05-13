@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="fruits">
+        <item>Ananas</item>
+        <item>Apfel</item>
+        <item>Aubergine</item>
+        <item>Avocado</item>
+        <item>Banane</item>
+        <item>Birne</item>
+        <item>Brombeere</item>
+        <item>Cranberry</item>
+        <item>Dattel</item>
+        <item>Erdbeere</item>
+        <item>Feige</item>
+        <item>Granatapfel</item>
+        <item>Grapefruit</item>
+        <item>Heidelbeere</item>
+        <item>Himbeere</item>
+        <item>Ingwer</item>
+        <item>Johannisbeere</item>
+        <item>Kaki</item>
+        <item>Kaktusfeige</item>
+        <item>Karambola</item>
+        <item>Kirsche</item>
+        <item>Kiwi</item>
+        <item>Kokosnuss</item>
+        <item>Limette</item>
+        <item>Lichi</item>
+        <item>Mandarinen</item>
+        <item>Mango</item>
+        <item>Maracuja</item>
+        <item>Nektarine</item>
+        <item>Orange</item>
+        <item>Papaya</item>
+        <item>Pfirsich</item>
+        <item>Pflaume</item>
+        <item>Quitte</item>
+        <item>Rote Bete</item>
+        <item>Stachelbeere</item>
+        <item>Sternfrucht</item>
+        <item>Tafeltraube</item>
+        <item>Wassermelone</item>
+        <item>Zitrone</item>
+        <item>Zuckermelone</item>
+    </array>
+    <array name="cars">
+        <item>Audi</item>
+        <item>BMW</item>
+        <item>Opel</item>
+        <item>Ford</item>
+        <item>Mercedes</item>
+        <item>Daiwoo</item>
+        <item>Dacia</item>
+        <item>Renault</item>
+        <item>Bentley</item>
+        <item>Maybach</item>
+        <item>Porsche</item>
+        <item>VW</item>
+    </array>
+    <array name="computers">
+        <item>Zuse</item>
+        <item>386</item>
+        <item>486</item>
+        <item>486</item>
+        <item>Pentium</item>
+        <item>AMD K5</item>
+        <item>Pentium II</item>
+        <item>AMD K6</item>
+        <item>Celeron</item>
+        <item>Pentium III</item>
+        <item>AMD Athlon K7</item>
+        <item>Celeron 2</item>
+        <item>AMD Duron</item>
+        <item>Pentium 4</item>
+        <item>AMD Athlon XP</item>
+        <item>Itanium</item>
+        <item>AMD Opteron</item>
+        <item>AMD Sempron</item>
+
+    </array>
+</resources>
