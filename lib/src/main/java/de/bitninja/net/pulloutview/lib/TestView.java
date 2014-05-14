@@ -1,6 +1,7 @@
 package de.bitninja.net.pulloutview.lib;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -18,7 +19,10 @@ public class TestView extends FrameLayout {
     private int _xDelta;
     private int _yDelta;
 
-    private int mCurrentScreen;
+    private int windowH = 0, windowW = 0;
+
+    private boolean isDragging = false;
+
     private WindowManager windowsManager;
 
     private static final int INVALID_POINTER = -1;
@@ -33,13 +37,18 @@ public class TestView extends FrameLayout {
     private int mScrollX = 0;
     private int mScrollY = 0;
 
+    private int mLastTopMargin = 0;
+
     private Scroller mScroller;
     private VelocityTracker mVelocityTracker;
 
-    private static final int SNAP_VELOCITY = 1000;
-
     private int mTouchSlop;
     private Display mScreen;
+    private boolean mIsOpen = false;
+    private int mMinHeight;
+    private int mOffsetTop;
+
+    private AttributeSet mAttrs;
 
     public TestView(Context context) {
         this(context,null);
@@ -51,6 +60,16 @@ public class TestView extends FrameLayout {
 
     public TestView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        // Style
+        final TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullOutAttrs);
+        // How much of the view sticks out when closed
+        mMinHeight = ta.getDimensionPixelOffset(R.styleable.PullOutAttrs_pov_minHeight, 0);
+        mOffsetTop = ta.getDimensionPixelOffset(R.styleable.PullOutAttrs_pov_offsetTop, 0);
+        ta.recycle();
+
+        mAttrs = attrs;
+
         init(context);
     }
 
@@ -59,14 +78,29 @@ public class TestView extends FrameLayout {
         windowsManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mScreen = windowsManager.getDefaultDisplay();
         mScroller = new Scroller(context);
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
-        setInitialPosition(0);
+        final ViewConfiguration configuration = ViewConfiguration.get(context);
+        mTouchSlop = configuration.getScaledTouchSlop();
+        final float density = context.getResources().getDisplayMetrics().density;
+
+        LayoutParams params = (LayoutParams)getLayoutParams();
+        if(params == null)
+            params = generateLayoutParams(mAttrs);
+        params.height = mMinHeight;
+        params.setMargins(0,mOffsetTop,0,0);
+        setLayoutParams(params);
+        invalidate();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
 
     }
 
-    public void setInitialPosition(int initialPosition){
-        mCurrentScreen = initialPosition;
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
     }
 
     @Override
@@ -111,67 +145,52 @@ public class TestView extends FrameLayout {
                 final float xDiff = Math.abs(x - mLastX);
                 final float y = MotionEventCompat.getY(event, pointerIndex);
                 final float yDiff = Math.abs(y - mLastY);
-                if (xDiff > mTouchSlop && xDiff > yDiff) {
-//                    mIsDragging = true;
-                    mLastX = x;
-                    setDrawingCacheEnabled(true);
-                } else if (yDiff > mTouchSlop && yDiff > xDiff) {
-//                    mIsDragging = true;
-                    mLastY = y;
-                    setDrawingCacheEnabled(true);
+
+                if(xDiff > 5 || yDiff > 5)
+                    isDragging = true;
+
+                Log.e(TestView.class.getSimpleName(), String.format("xDiff: %d ", (int) xDiff));
+
+                if(y<mLastY){
+                    mLastTopMargin-=yDiff;
+                }else {
+                    mLastTopMargin+=yDiff;
                 }
 
-                if (xDiff < 0) {
-                    if (mScrollX > 0) {
-                        scrollBy(Math.max(-mScrollX, (int) xDiff), 0);
-                    }
-                }else if (xDiff > 0) {
-
-                    final int availableToScroll = mScrollX - getWidth();
-
-//                    final int availableToScroll = getChildAt(getChildCount() - 1)
-//                            .getRight() - mScrollX - getWidth();
-                    if (availableToScroll > 0) {
-                        scrollBy(Math.min(availableToScroll, (int)xDiff), 0);
-                    }
-                }
+                MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
+                params.setMargins(0,mLastTopMargin,0,0);
+                setLayoutParams(params);
 
                 break;
 
             case MotionEvent.ACTION_UP:
 
+                if(isDragging){
+                    isDragging = false;
+                } else if (mIsOpen) {
+                    closeLayer();
+                } else if (!mIsOpen) {
+                    openLayer();
+                }
                 mActivePointerId = INVALID_POINTER;
-
-                final VelocityTracker velocityTracker = mVelocityTracker;
-                velocityTracker.computeCurrentVelocity(1000);
-                int velocityX = (int) velocityTracker.getXVelocity();
-//                if (velocityX > SNAP_VELOCITY && mCurrentScreen > 0) {
-//                    // Fling hard enough to move left
-//                    snapToScreen(mCurrentScreen - 1);
-//                } else if (velocityX < -SNAP_VELOCITY
-//                        && mCurrentScreen < getChildCount() - 1) {
-//                    // Fling hard enough to move right
-//                    snapToScreen(mCurrentScreen + 1);
-//                } else {
-//                    snapToDestination();
-//                }
-//                if (mVelocityTracker != null) {
-//                    mVelocityTracker.recycle();
-//                    mVelocityTracker = null;
-//                }
-
-
-               snapToDestination();
 
                 break;
 
             case MotionEvent.ACTION_CANCEL:
 
-                mScrollX = this.getScrollX();
-
                 break;
 
             case MotionEventCompat.ACTION_POINTER_DOWN:
+
+                mActivePointerId = event.getAction()
+                        & (Build.VERSION.SDK_INT >= 8 ? MotionEvent.ACTION_POINTER_INDEX_MASK
+                        : MotionEventCompat.ACTION_POINTER_INDEX_MASK);
+                mLastX = mInitialX = MotionEventCompat.getX(event, mActivePointerId);
+                mLastY = mInitialY = MotionEventCompat.getY(event, mActivePointerId);
+
+                if (!mScroller.isFinished()) {
+                    mScroller.abortAnimation();
+                }
 
                 break;
 
@@ -182,25 +201,46 @@ public class TestView extends FrameLayout {
         return true;
     }
 
-    private void snapToDestination() {
-        final int screenWidth = getWidth();
-        final int whichScreen = (mScrollX + (screenWidth / 2)) / screenWidth;
-        snapToScreen(whichScreen);
+    private void openLayer(){
+
+        MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
+        params.height = LayoutParams.MATCH_PARENT;
+        params.setMargins(0,mOffsetTop,0,0);
+        setLayoutParams(params);
+
+        mIsOpen = true;
+    }
+    private void closeLayer(){
+
+        MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
+
+        if(params == null)
+            params = generateLayoutParams(mAttrs);
+
+        int dist = 0;
+
+//        ViewGroup parentView = (ViewGroup)getParent();
+
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+//            Point size = new Point();
+//            mScreen.getSize(size);
+//            dist = size.y;
+//        }else {
+//            dist = mScreen.getHeight();
+//        }
+
+//        dist = parentView.getHeight();
+
+        Log.e(TestView.class.getSimpleName(), String.format("DIST: %d ", dist));
+
+//        params.setMargins(0, 600 - mMinHeight, 0, 0);
+//        params.height = 10;
+        params.height = mMinHeight;
+        setLayoutParams(params);
+        mIsOpen = false;
     }
 
-    public void snapToScreen(int whichScreen) {
-        mCurrentScreen = whichScreen;
-        final int newX = whichScreen * getWidth();
-        final int delta = newX - mScrollX;
-        mScroller.startScroll(mScrollX, 0, delta, 0, Math.abs(delta) * 2);
-        invalidate();
-    }
-    public void setToScreen(int whichScreen) {
-        mCurrentScreen = whichScreen;
-        final int newX = whichScreen * getWidth();
-        mScroller.startScroll(newX, 0, 0, 0, 10);
-        invalidate();
-    }
+
 
     @Override
     public void computeScroll() {
@@ -211,43 +251,10 @@ public class TestView extends FrameLayout {
         }
     }
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent event) {
-//
-//        final int X = (int) event.getRawX();
-//        final int Y = (int) event.getRawY();
-//
-//        Log.e(TestView.class.getSimpleName(), String.format("Action: %d, X: %d, Y: %d", event.getAction(), X, Y));
-//
-//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
-//        layoutParams.bottomMargin = -250;
-//        setLayoutParams(layoutParams);
-//        invalidate();
-//
-//
-////        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-////            case MotionEvent.ACTION_DOWN:
-////                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) getLayoutParams();
-////                _xDelta = X - lParams.leftMargin;
-////                _yDelta = Y - lParams.topMargin;
-////                break;
-////            case MotionEvent.ACTION_UP:
-////                break;
-////            case MotionEvent.ACTION_POINTER_DOWN:
-////                break;
-////            case MotionEvent.ACTION_POINTER_UP:
-////                break;
-////            case MotionEvent.ACTION_MOVE:
-////                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
-////                layoutParams.leftMargin = X - _xDelta;
-////                layoutParams.topMargin = Y - _yDelta;
-////                layoutParams.rightMargin = -250;
-////                layoutParams.bottomMargin = -250;
-////                setLayoutParams(layoutParams);
-////                windowsManager.updateViewLayout(this,layoutParams);
-////                break;
-////        }
-////        invalidate();
-//        return false;
-//    }
+    @Override
+    protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        windowW = getMeasuredWidth();
+        windowH = getMeasuredHeight();
+    }
 }
