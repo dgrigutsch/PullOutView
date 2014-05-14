@@ -13,12 +13,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTabHost = (FragmentTabHost) findViewById(R.id.tabhost);
-        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent );
-
-        setupTab(ListFragment.class, "Tab 1", getResources().getStringArray(R.array.fruits));
-        setupTab(ListFragment.class, "Tab 2", getResources().getStringArray(R.array.cars));
-        setupTab(ListFragment.class, "Tab 3",  getResources().getStringArray(R.array.computers));
+//        mTabHost = (FragmentTabHost) findViewById(R.id.tabhost);
+//        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent );
+//
+//        setupTab(ListFragment.class, "Tab 1", getResources().getStringArray(R.array.fruits));
+//        setupTab(ListFragment.class, "Tab 2", getResources().getStringArray(R.array.cars));
+//        setupTab(ListFragment.class, "Tab 3",  getResources().getStringArray(R.array.computers));
     }
 
     private void setupTab(Class fragmentClass, final String text) {

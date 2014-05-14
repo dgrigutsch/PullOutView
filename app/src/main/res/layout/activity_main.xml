@@ -12,36 +12,41 @@
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <de.bitninja.net.pulloutview.lib.PullOutView
-        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/slidingLayer1"
+    <de.bitninja.net.pulloutview.lib.TestView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        slidingLayer:shadowDrawable="@drawable/sidebar_shadow"
-        slidingLayer:shadowWidth="14dp"
-        slidingLayer:offsetWidth="100dp"
-        slidingLayer:stickTo="bottom"
-        slidingLayer:closeOnTapEnabled="true">
+        android:background="#ff33b5e5">
+    </de.bitninja.net.pulloutview.lib.TestView>
 
-        <android.support.v4.app.FragmentTabHost
-            android:id="@+id/tabhost"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-            <FrameLayout
-                android:id="@+id/realtabcontent"
-                android:layout_marginTop="50dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+    <!--<de.bitninja.net.pulloutview.lib.PullOutView-->
+        <!--xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/slidingLayer1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="100dp"-->
+        <!--slidingLayer:shadowDrawable="@drawable/sidebar_shadow"-->
+        <!--slidingLayer:shadowWidth="14dp"-->
+        <!--slidingLayer:offsetWidth="100dp"-->
+        <!--slidingLayer:stickTo="bottom"-->
+        <!--slidingLayer:closeOnTapEnabled="true">-->
+
+        <!--<android.support.v4.app.FragmentTabHost-->
+            <!--android:id="@+id/tabhost"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent">-->
+            <!--<FrameLayout-->
+            <!--android:id="@android:id/tabcontent"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+            <!--<FrameLayout-->
+                <!--android:id="@+id/realtabcontent"-->
+                <!--android:layout_marginTop="50dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent" />-->
 
 
-        </android.support.v4.app.FragmentTabHost>
+        <!--</android.support.v4.app.FragmentTabHost>-->
 
-    </de.bitninja.net.pulloutview.lib.PullOutView>
+    <!--</de.bitninja.net.pulloutview.lib.PullOutView>-->
 
 </RelativeLayout>
