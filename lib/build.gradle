@@ -4,6 +4,8 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.0.3"
 
+    publishNonDefault true
+
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
@@ -22,4 +24,95 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:19.+'
     compile 'com.android.support:appcompat-v7:19.+'
+}
+
+task apklib(type: Zip) {
+    destinationDir = file('build/libs')
+    appendix = extension = 'apklib'
+
+    from 'src/main/AndroidManifest.xml'
+    into('res') {
+        from 'src/main/res'
+    }
+    into('src') {
+        from 'src/main/java'
+    }
+}
+
+artifacts {
+    archives apklib
+}
+
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+archivesBaseName = 'PullOutView'
+archivesBasePackage = 'de.bitninja.net.pulloutview'
+archiveVersionName = '1.0.0-SNAPSHOT'
+
+def getArtifactFullPath() {
+    return "${project.libsDir}/${project.name}-${project.version}.aar"
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    archives {
+        extendsFrom configurations.default
+    }
+}
+
+signing {
+    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+
+        repository(url: "file:///${projectDir}/m2/repository/")
+
+//        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//        repository(url: sonatypeRepo) {
+//            authentication(userName: sonatypeUsername,
+//                    password: sonatypePassword)
+//        }
+
+        pom.project {
+            name 'PullOutView'
+            packaging 'aar'
+            description 'description'
+            url 'https://github.com/dgrigutsch/PullOutView'
+
+            scm {
+                url 'scm:git@github.com/dgrigutsch/PullOutView.git'
+                connection 'scm:github.com/dgrigutsch/PullOutView.git'
+                developerConnection 'scm:github.com/dgrigutsch/PullOutView:PullOutView.git'
+            }
+
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'dgrigutsch'
+                    name 'David Grigutsch'
+                }
+            }
+        }
+        pom.groupId = archivesBasePackage
+        pom.artifactId = archivesBaseName
+        pom.version = archiveVersionName
+    }
 }

@@ -66,14 +66,13 @@ public class MainActivity extends FragmentActivity {
 
             View widget = mTabHost.getTabWidget().getChildAt(i);
 
-
-
             widget.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
+                    String tabId = mTabHost.getCurrentTabTag();
+
                     if(event.getAction() == MotionEvent.ACTION_UP){
-                        String tabId = mTabHost.getCurrentTabTag();
 
                         Log.e(MainActivity.class.getName(), "TabId " + currentTabId);
 
