@@ -4,5 +4,8 @@
     <string name="app_name">PullOutViewTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="tab_fruits">Fruits</string>
+    <string name="tab_cars">Cars</string>
+    <string name="tab_computers">Computers</string>
 
 </resources>
