@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="PullOutAttrs">
+    <declare-styleable name="PullOutView">
         <attr name="pov_shadowDrawable" format="boolean"/>
         <attr name="pov_shadowWidth" format="dimension"/>
         <attr name="pov_closeOnTapEnabled" format="boolean"/>

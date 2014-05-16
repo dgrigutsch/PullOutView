@@ -3,8 +3,6 @@ package de.bitninja.net.app.pullviewtest;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -66,32 +64,31 @@ public class MainActivity extends FragmentActivity {
 
             View widget = mTabHost.getTabWidget().getChildAt(i);
 
-            widget.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
+//            widget.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//
+//                    String tabId = mTabHost.getCurrentTabTag();
+//
+//                    if(event.getAction() == MotionEvent.ACTION_UP){
+//
+//                        Log.e(MainActivity.class.getName(), "TabId " + currentTabId);
+//
+//                        if(currentTabId != tabId) {
+//                            currentTabId = tabId;
+//                        }else {
+//                            if(!pullOutView.isOpened())
+//                                pullOutView.openLayer(true);
+//                            else
+//                                pullOutView.closeLayer(true);
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
 
-                    String tabId = mTabHost.getCurrentTabTag();
 
-                    if(event.getAction() == MotionEvent.ACTION_UP){
-
-                        Log.e(MainActivity.class.getName(), "TabId " + currentTabId);
-
-                        if(currentTabId != tabId) {
-                            currentTabId = tabId;
-                        }else {
-                            if(!pullOutView.isOpened())
-                                pullOutView.openLayer(true);
-                            else
-                                pullOutView.closeLayer(true);
-                        }
-                    }
-                    return false;
-                }
-            });
-
-
-            final TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
-                    .findViewById(android.R.id.title);
+            final TextView tv = (TextView) widget.findViewById(android.R.id.title);
             if (tv == null)
                 continue;
             else

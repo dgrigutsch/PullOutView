@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="fruits">
+    <string-array name="fruits">
         <item>Ananas</item>
         <item>Apfel</item>
         <item>Aubergine</item>
@@ -42,8 +42,8 @@
         <item>Wassermelone</item>
         <item>Zitrone</item>
         <item>Zuckermelone</item>
-    </array>
-    <array name="cars">
+    </string-array>
+    <string-array name="cars">
         <item>Audi</item>
         <item>BMW</item>
         <item>Opel</item>
@@ -56,11 +56,10 @@
         <item>Maybach</item>
         <item>Porsche</item>
         <item>VW</item>
-    </array>
-    <array name="computers">
+    </string-array>
+    <string-array name="computers">
         <item>Zuse</item>
         <item>386</item>
-        <item>486</item>
         <item>486</item>
         <item>Pentium</item>
         <item>AMD K5</item>
@@ -77,5 +76,5 @@
         <item>AMD Opteron</item>
         <item>AMD Sempron</item>
 
-    </array>
+    </string-array>
 </resources>

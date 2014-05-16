@@ -12,17 +12,17 @@
         android:layout_height="wrap_content" />
 
     <de.bitninja.net.pulloutview.lib.PullOutView
-        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+        xmlns:pull="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pullOut1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
-        slidingLayer:shadowDrawable="@drawable/action_pull_drawable"
-        slidingLayer:shadowWidth="20dp"
-        slidingLayer:offsetWidth="68dp"
-        slidingLayer:stickTo="bottom"
-        slidingLayer:openOnTapEnabled="true"
-        slidingLayer:closeOnTapEnabled="true">
+        pull:shadowDrawable="@drawable/action_pull_drawable"
+        pull:shadowWidth="30dp"
+        pull:offsetWidth="68dp"
+        pull:stickTo="bottom"
+        pull:openOnTapEnabled="true"
+        pull:closeOnTapEnabled="true">
 
             <android.support.v4.app.FragmentTabHost
                 android:id="@+id/tabhost"
